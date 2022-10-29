@@ -8,4 +8,5 @@
 
 
 2. API
-- [] Register User
+- [x] Register User
+- [] Implementing Json Web Token
