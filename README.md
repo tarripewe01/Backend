@@ -9,4 +9,5 @@
 
 2. API
 - [x] Register User
+- [x] Hash Password using Bcrypt
 - [] Implementing Json Web Token
