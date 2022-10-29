@@ -5,9 +5,11 @@
 - [x] Setup Router
 - [x] Setup Model User
 - [x] Setup Validator
+- [x] Custom Middleware & JWT Verify
 
 
 2. API
 - [x] Register User
 - [x] Hash Password using Bcrypt
-- [] Implementing Json Web Token
+- [x] Implementing Json Web Token
+ 
