@@ -16,4 +16,5 @@
 - [x] Current User Profile Route
 - [x] Create & Update Profile Route
 - [x] Get All Profile Route
+- [x] Get Profile by User_ID Route
  
