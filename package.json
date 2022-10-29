@@ -1,0 +1,34 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Untuk keperluan magang di ITC-Finance",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tarripewe01/Backend.git"
+  },
+  "author": "Tarri Peritha Westi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tarripewe01/Backend/issues"
+  },
+  "homepage": "https://github.com/tarripewe01/Backend#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "config": "^3.3.8",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.7.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "concurrently": "^7.5.0",
+    "nodemon": "^2.0.20"
+  }
+}
