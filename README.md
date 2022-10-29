@@ -9,7 +9,8 @@
 
 
 2. API
-- [x] Register User
+- [x] Register User Route
 - [x] Hash Password using Bcrypt
 - [x] Implementing Json Web Token
+- [x] Login Route
  
