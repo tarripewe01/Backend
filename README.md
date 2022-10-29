@@ -18,5 +18,8 @@
 - [x] Get All Profile Route
 - [x] Get Profile by User_ID Route
 - [x] Delete User & Profile Route
-- [x] Create a Produk Route
+- [x] Create a Product Route
+- [x] Get all Products Route
+- [x] Delete Product by ID Route
+- [x] Favorite a Product Route
  
