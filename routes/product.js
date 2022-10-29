@@ -100,7 +100,7 @@ router.delete("/:id", auth, async (req, res) => {
 })
 
 // @route   PUT api/product/favorite/:id
-// @desc    Like a Product
+// @desc    Favorite a Product
 // @access  Private
 router.put("/favorite/:id", auth, async (req, res) => {
   try {
@@ -124,5 +124,36 @@ router.put("/favorite/:id", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 })
+
+// @route   PUT api/product/unfavorite/:id
+// @desc    Unfavorite a Product
+// @access  Private
+router.put("/unfavorite/:id", auth, async (req, res) => {
+  try {
+    const product = await ProductModel.findById(req.params.id);
+
+    // Check if the product has already been liked
+    if (
+      product.favorites.filter(favorite => favorite.user.toString() === req.user.id)
+        .length === 0
+    ) {
+      return res.status(400).json({ msg: "Product has not yet been liked" });
+    }
+
+    // Get remove index
+    const removeIndex = product.favorites
+      .map(favorite => favorite.user.toString())
+      .indexOf(req.user.id);
+
+    product.favorites.splice(removeIndex, 1);
+
+    await product.save();
+
+    res.json(product.favorites);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
 
 module.exports = router;

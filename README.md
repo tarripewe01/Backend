@@ -22,4 +22,5 @@
 - [x] Get all Products Route
 - [x] Delete Product by ID Route
 - [x] Favorite a Product Route
+- [x] Unfavorite a Product Route
  
