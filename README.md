@@ -13,4 +13,5 @@
 - [x] Hash Password using Bcrypt
 - [x] Implementing Json Web Token
 - [x] Login Route
+- [x] Current User Profile Route
  
