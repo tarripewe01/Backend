@@ -48,7 +48,7 @@ router.get("/", auth, async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-})
+});
 
 // @route   GET api/product/:id
 // @desc    GET Product by ID
@@ -71,7 +71,7 @@ router.get("/:id", auth, async (req, res) => {
 
     res.status(500).send("Server Error");
   }
-})
+});
 
 // @route   DELETE api/product/:id
 // @desc    Delete Products
@@ -97,7 +97,7 @@ router.delete("/:id", auth, async (req, res) => {
 
     res.status(500).send("Server Error");
   }
-})
+});
 
 // @route   PUT api/product/favorite/:id
 // @desc    Favorite a Product
@@ -108,8 +108,9 @@ router.put("/favorite/:id", auth, async (req, res) => {
 
     // Check if the product has already been liked
     if (
-      product.favorites.filter(favorite => favorite.user.toString() === req.user.id)
-        .length > 0
+      product.favorites.filter(
+        (favorite) => favorite.user.toString() === req.user.id
+      ).length > 0
     ) {
       return res.status(400).json({ msg: "Product already liked" });
     }
@@ -123,7 +124,7 @@ router.put("/favorite/:id", auth, async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-})
+});
 
 // @route   PUT api/product/unfavorite/:id
 // @desc    Unfavorite a Product
@@ -134,15 +135,16 @@ router.put("/unfavorite/:id", auth, async (req, res) => {
 
     // Check if the product has already been liked
     if (
-      product.favorites.filter(favorite => favorite.user.toString() === req.user.id)
-        .length === 0
+      product.favorites.filter(
+        (favorite) => favorite.user.toString() === req.user.id
+      ).length === 0
     ) {
       return res.status(400).json({ msg: "Product has not yet been liked" });
     }
 
     // Get remove index
     const removeIndex = product.favorites
-      .map(favorite => favorite.user.toString())
+      .map((favorite) => favorite.user.toString())
       .indexOf(req.user.id);
 
     product.favorites.splice(removeIndex, 1);
@@ -155,5 +157,41 @@ router.put("/unfavorite/:id", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+// @route   POST api/product/bid/:id
+// @desc    Create Bid a Product
+// @access  Private
+router.post(
+  "/bid/:id",
+  auth,
+  [check("nominal_bid", "Bid is required").not().isEmpty()],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const user = await UserModel.findById(req.user.id).select("-password");
+      const product = await ProductModel.findById(req.params.id);
+
+      const { nominal_bid } = req.body;
+
+      const newBid = {
+        nominal_bid,
+        user: req.user.id,
+      };
+
+      product.bids.unshift(newBid);
+
+      await product.save();
+
+      res.json(product.bids);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
 
 module.exports = router;
