@@ -8,6 +8,7 @@ connectDB();
 
 // Init Middleware
 app.use(express.json({ extended: false }));
+app.use(express.static(__dirname));
 
 app.get("/", (req, res) => {
   res.send("API Running!");
