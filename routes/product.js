@@ -6,11 +6,13 @@ const { check, validationResult } = require("express-validator");
 const auth = require("../middleware/auth");
 const ProductModel = require("../models/Product");
 const UserModel = require("../models/User");
+const upload = require("../middleware/upload")
+
 
 // @route   POST api/product
 // @desc    Create a Product
 // @access  Private
-router.post("/", auth, async (req, res) => {
+router.post("/", auth, upload.any("photo_path") ,async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -19,18 +21,29 @@ router.post("/", auth, async (req, res) => {
   try {
     const user = await UserModel.findById(req.user.id).select("-password");
 
-    const { nama_produk, harga, cabang } = req.body;
+    const { nama_produk, harga, cabang,  tanggal_mulai,
+      tanggal_selesai } = req.body;
 
     const newProduct = new ProductModel({
       nama_produk,
       harga,
       cabang,
+      tanggal_mulai,
+      tanggal_selesai,
       user: req.user.id,
     });
-
     const product = await newProduct.save();
-
-    res.json(product);
+    if(req.files){
+      await Promise.all(
+        req.files.map(async (path) => {
+          await ProductModel.findByIdAndUpdate(product.id, {
+            $push : { photo_path : `/uploads/${path.filename}`}
+          }, { new : true })
+        })
+      )
+    }
+    const data = await ProductModel.findById(product.id)
+    res.json(data);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -49,6 +62,34 @@ router.get("/", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+//filter product
+//localhost:9000/api/product/filter?category=Mobil&satus=Aktif
+
+router.get('/filter', async(req,res) => {
+  const {category, status} = req.query
+  try {
+    if(category && !status){
+      const data = await ProductModel.find({ category : category })
+      return res.send(data)
+    }else if(!category && status){
+      const data = await ProductModel.find({ status_lelang : status })
+      return res.send(data)
+    }else{
+      const data = await ProductModel.find({ status_lelang : status, category: category })
+      return res.send(data)
+    }
+  } catch (error) {
+    
+  }
+})
+
+module.exports = router;
+
+module.exports = router;
+
+
+
 
 // @route   GET api/product/:id
 // @desc    GET Product by ID
@@ -194,4 +235,5 @@ router.post(
   }
 );
 
-module.exports = router;
+
+

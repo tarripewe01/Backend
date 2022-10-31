@@ -15,7 +15,7 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // photo_path: [],
+    photo_path: [],
     harga: {
       type: Number,
       required: true,
@@ -24,6 +24,16 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       default: "Aktif",
     },
+    tanggal_mulai: { 
+      type: String, 
+      required: true 
+    },
+    tanggal_selesai: { 
+      type: String, 
+      required: true 
+    },
+    // waktu_mulai: { type: Date, required: true },
+    // waktu_selesai: { type: Date, required: true },
     status_lelang: {
       type: String,
       default: "Tidak Aktif",
