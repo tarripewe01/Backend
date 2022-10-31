@@ -4,8 +4,8 @@ const secret_key = "bismillah";
 
 const auth = async (req, res, next) => {
   // Get token from header
-  // const token = req.header("x-auth-token");
-  const token = req.header("auth");
+  const token = req.header("x-auth-token");
+  // const token = req.header("auth");
 
   // Check if not token
   if (!token) {

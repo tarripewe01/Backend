@@ -6,13 +6,12 @@ const { check, validationResult } = require("express-validator");
 const auth = require("../middleware/auth");
 const ProductModel = require("../models/Product");
 const UserModel = require("../models/User");
-const upload = require("../middleware/upload")
-
+const upload = require("../middleware/upload");
 
 // @route   POST api/product
 // @desc    Create a Product
 // @access  Private
-router.post("/", auth, upload.any("photo_path") ,async (req, res) => {
+router.post("/", auth, upload.any("photo_path"), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -21,8 +20,8 @@ router.post("/", auth, upload.any("photo_path") ,async (req, res) => {
   try {
     const user = await UserModel.findById(req.user.id).select("-password");
 
-    const { nama_produk, harga, cabang,  tanggal_mulai,
-      tanggal_selesai } = req.body;
+    const { nama_produk, harga, cabang, tanggal_mulai, tanggal_selesai } =
+      req.body;
 
     const newProduct = new ProductModel({
       nama_produk,
@@ -33,16 +32,20 @@ router.post("/", auth, upload.any("photo_path") ,async (req, res) => {
       user: req.user.id,
     });
     const product = await newProduct.save();
-    if(req.files){
+    if (req.files) {
       await Promise.all(
         req.files.map(async (path) => {
-          await ProductModel.findByIdAndUpdate(product.id, {
-            $push : { photo_path : `/uploads/${path.filename}`}
-          }, { new : true })
+          await ProductModel.findByIdAndUpdate(
+            product.id,
+            {
+              $push: { photo_path: `/uploads/${path.filename}` },
+            },
+            { new: true }
+          );
         })
-      )
+      );
     }
-    const data = await ProductModel.findById(product.id)
+    const data = await ProductModel.findById(product.id);
     res.json(data);
   } catch (err) {
     console.error(err.message);
@@ -63,33 +66,50 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-//filter product
-//localhost:9000/api/product/filter?category=Mobil&satus=Aktif
 
-router.get('/filter', async(req,res) => {
-  const {category, status} = req.query
+// @route   GET api/product/filter?category=Mobil&status=Aktif
+// @desc    Get all Products Filter
+// @access  Public
+router.get("/filter", async (req, res) => {
+  const { category, status } = req.query;
   try {
-    if(category && !status){
-      const data = await ProductModel.find({ category : category })
-      return res.send(data)
-    }else if(!category && status){
-      const data = await ProductModel.find({ status_lelang : status })
-      return res.send(data)
-    }else{
-      const data = await ProductModel.find({ status_lelang : status, category: category })
-      return res.send(data)
+    if (category && !status) {
+      const data = await ProductModel.find({ category: category });
+      return res.send(data);
+    } else if (!category && status) {
+      const data = await ProductModel.find({ status_produk: status });
+      return res.send(data);
+    } else {
+      const data = await ProductModel.find({
+        status_produk: status,
+        category: category,
+      });
+      return res.send(data);
     }
-  } catch (error) {
-    
-  }
-})
+  } catch (error) {}
+});
 
-module.exports = router;
-
-module.exports = router;
-
-
-
+// @route   GET api/product/filter/lelang?category=Mobil&status=Aktif
+// @desc    Get all Lelang Filter
+// @access  Public
+router.get("/filter/lelang", async (req, res) => {
+  const { category, status } = req.query;
+  try {
+    if (category && !status) {
+      const data = await ProductModel.find({ category: category });
+      return res.send(data);
+    } else if (!category && status) {
+      const data = await ProductModel.find({ status_lelang: status });
+      return res.send(data);
+    } else {
+      const data = await ProductModel.find({
+        status_lelang: status,
+        category: category,
+      });
+      return res.send(data);
+    }
+  } catch (error) {}
+});
 
 // @route   GET api/product/:id
 // @desc    GET Product by ID
@@ -235,5 +255,4 @@ router.post(
   }
 );
 
-
-
+module.exports = router;
