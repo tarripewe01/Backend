@@ -20,7 +20,7 @@ router.post("/", auth, upload.any("photo_path"), async (req, res) => {
   try {
     const user = await UserModel.findById(req.user.id).select("-password");
 
-    const { nama_produk, harga, cabang, tanggal_mulai, tanggal_selesai } =
+    const { nama_produk, harga, cabang, tanggal_mulai, tanggal_selesai , kategori} =
       req.body;
 
     const newProduct = new ProductModel({
@@ -29,6 +29,7 @@ router.post("/", auth, upload.any("photo_path"), async (req, res) => {
       cabang,
       tanggal_mulai,
       tanggal_selesai,
+      kategori,
       user: req.user.id,
     });
     const product = await newProduct.save();
@@ -67,44 +68,44 @@ router.get("/", auth, async (req, res) => {
 });
 
 
-// @route   GET api/product/filter?category=Mobil&status=Aktif
+// @route   GET api/product/filter?kategori=Mobil&status=Aktif
 // @desc    Get all Products Filter
 // @access  Public
 router.get("/filter", async (req, res) => {
-  const { category, status } = req.query;
+  const { kategori, status } = req.query;
   try {
-    if (category && !status) {
-      const data = await ProductModel.find({ category: category });
+    if (kategori && !status) {
+      const data = await ProductModel.find({ kategori: kategori });
       return res.send(data);
-    } else if (!category && status) {
+    } else if (!kategori && status) {
       const data = await ProductModel.find({ status_produk: status });
       return res.send(data);
     } else {
       const data = await ProductModel.find({
         status_produk: status,
-        category: category,
+        kategori: kategori,
       });
       return res.send(data);
     }
   } catch (error) {}
 });
 
-// @route   GET api/product/filter/lelang?category=Mobil&status=Aktif
+// @route   GET api/product/filter/lelang?kategori=Mobil&status=Aktif
 // @desc    Get all Lelang Filter
 // @access  Public
 router.get("/filter/lelang", async (req, res) => {
-  const { category, status } = req.query;
+  const { kategori, status } = req.query;
   try {
-    if (category && !status) {
-      const data = await ProductModel.find({ category: category });
+    if (kategori && !status) {
+      const data = await ProductModel.find({ kategori: kategori });
       return res.send(data);
-    } else if (!category && status) {
+    } else if (!kategori && status) {
       const data = await ProductModel.find({ status_lelang: status });
       return res.send(data);
     } else {
       const data = await ProductModel.find({
         status_lelang: status,
-        category: category,
+        kategori: kategori,
       });
       return res.send(data);
     }
