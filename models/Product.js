@@ -20,6 +20,10 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    kategori:{
+      type: String,
+      require: true,
+    },
     status_produk: {
       type: String,
       default: "Aktif",
@@ -32,8 +36,11 @@ const ProductSchema = new mongoose.Schema(
       type: String, 
       required: true 
     },
+<<<<<<< HEAD
     waktu_mulai: { type: String, required: true },
     waktu_selesai: { type: String, required: true },
+=======
+>>>>>>> afa4551de20e87b2f036abb12edafa884899daf1
     status_lelang: {
       type: String,
       default: "Tidak Aktif",
