@@ -3,16 +3,25 @@ const connectDB = require("./db");
 const moment = require('moment')
 const StatusChange = require('./middleware/statusChange')
 const morgan = require('morgan')
+const cron = require('node-cron')
 
 const app = express();
 
 // Connect Database
 connectDB();
+
+//cron
+
+const job = cron.schedule('* * * * *', async() => {
+  StatusChange();
+  console.log("Ticker");
+})
+job.start()
+
 // Init Middleware
 app.use(express.json({ extended: false }));
 app.use(express.static(__dirname));
 app.use(morgan("dev"));
-StatusChange()
 app.get("/", (req, res) => {
   res.send("API Running!");
 });
