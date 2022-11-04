@@ -8,6 +8,8 @@ const bcrypt = require("bcryptjs");
 const auth = require("../middleware/auth");
 const UserModel = require("../models/User");
 
+
+
 // @route   GET api/auth
 // @desc    Test route
 // @access  Private
