@@ -4,7 +4,6 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const secret_key = "bismillah";
 
 const auth = require("../middleware/auth");
 const UserModel = require("../models/User");
@@ -63,10 +62,15 @@ router.post(
         },
       };
 
-      jwt.sign(payload, secret_key, { expiresIn: 360000 }, (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      });
+      jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        { expiresIn: 360000 },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
     } catch (err) {
       console.log(err.message);
       res.status(500).send("Server error");

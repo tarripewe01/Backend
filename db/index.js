@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
-const db =
-  "mongodb+srv://ITC-Finance:DO5omFW5ESPEwXtv@itc-finance.8o4u6ih.mongodb.net/BE_Lelang_ITC?retryWrites=true&w=majority";
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(db, {
+    await mongoose.connect(process.env.MONGODB_CONNECT, {
       useNewUrlParser: true,
       // useCreateIndex: true,
       // useFindAndModify: false,

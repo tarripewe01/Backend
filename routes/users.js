@@ -7,8 +7,6 @@ const jwt = require("jsonwebtoken");
 
 const UserModel = require("../models/User");
 
-const secret_key = 'bismillah';
-
 // @route   POST api/users
 // @desc    Register user
 // @access  Public
@@ -61,7 +59,7 @@ router.post(
         },
       };
 
-      jwt.sign(payload, secret_key, { expiresIn: 360000 }, (err, token) => {
+      jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 }, (err, token) => {
         if (err) throw err;
         res.json({ token });
       });
