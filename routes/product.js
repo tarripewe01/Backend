@@ -20,16 +20,78 @@ router.post("/", auth, upload.any("photo_path"), async (req, res) => {
   try {
     const user = await UserModel.findById(req.user.id).select("-password");
 
-    const { nama_produk, harga, cabang, tanggal_mulai, tanggal_selesai , kategori} =
-      req.body;
-
-    const newProduct = new ProductModel({
+    const {
+      cabang,
       nama_produk,
       harga,
-      cabang,
+      kategori,
+      status_produk,
       tanggal_mulai,
       tanggal_selesai,
+      waktu_mulai,
+      waktu_selesai,
+      status_lelang,
+      no_lot,
+      kondisi_mesin,
+      kondisi_exterior,
+      kondisi_interior,
+      model_produk,
+      tahun_produk,
+      transmisi,
+      no_rangka,
+      no_mesin,
+      merk_produk,
+      kapasitas_mesin,
+      odometer,
+      catatan,
+      no_polisi,
+      warna,
+      stnk,
+      exp_stnk,
+      faktur,
+      ktp,
+      kwitansi,
+      form_A,
+      sph,
+      keur,
+      bpkb,
+    } = req.body;
+
+    const newProduct = new ProductModel({
+      cabang,
+      nama_produk,
+      harga,
       kategori,
+      status_produk,
+      tanggal_mulai,
+      tanggal_selesai,
+      waktu_mulai,
+      waktu_selesai,
+      status_lelang,
+      no_lot,
+      kondisi_mesin,
+      kondisi_exterior,
+      kondisi_interior,
+      model_produk,
+      tahun_produk,
+      transmisi,
+      no_rangka,
+      no_mesin,
+      merk_produk,
+      kapasitas_mesin,
+      odometer,
+      catatan,
+      no_polisi,
+      warna,
+      stnk,
+      exp_stnk,
+      faktur,
+      ktp,
+      kwitansi,
+      form_A,
+      sph,
+      keur,
+      bpkb,
       user: req.user.id,
     });
     const product = await newProduct.save();
@@ -66,7 +128,6 @@ router.get("/", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-
 
 // @route   GET api/product/filter?kategori=Mobil&status=Aktif
 // @desc    Get all Products Filter
