@@ -118,8 +118,8 @@ router.post("/", auth, upload.any("photo_path"), async (req, res) => {
 
 // @route   GET api/product
 // @desc    Get all Products
-// @access  Private
-router.get("/", auth, async (req, res) => {
+// @access  Public
+router.get("/", async (req, res) => {
   try {
     const products = await ProductModel.find().sort({ date: -1 });
     res.json(products);
@@ -176,7 +176,7 @@ router.get("/filter/lelang", async (req, res) => {
 // @route   GET api/product/:id
 // @desc    GET Product by ID
 // @access  Private
-router.get("/:id", auth, async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
@@ -225,7 +225,7 @@ router.delete("/:id", auth, async (req, res) => {
 // @route   PUT api/product/favorite/:id
 // @desc    Favorite a Product
 // @access  Private
-router.put("/favorite/:id", auth, async (req, res) => {
+router.put("/favorite/:id",  async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
@@ -252,7 +252,7 @@ router.put("/favorite/:id", auth, async (req, res) => {
 // @route   PUT api/product/unfavorite/:id
 // @desc    Unfavorite a Product
 // @access  Private
-router.put("/unfavorite/:id", auth, async (req, res) => {
+router.put("/unfavorite/:id",  async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
