@@ -11,7 +11,7 @@ const upload = require("../middleware/upload");
 // @route   POST api/product
 // @desc    Create a Product
 // @access  Private
-router.post("/", auth, upload.any("photo_path"), async (req, res) => {
+router.post("/",  upload.any("photo_path"), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -119,7 +119,7 @@ router.post("/", auth, upload.any("photo_path"), async (req, res) => {
 // @route   POST api/product
 // @desc    Create a Product
 // @access  Private
-router.put("/:id", auth, upload.any("photo_path"), async (req, res) => {
+router.put("/:id",  upload.any("photo_path"), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -242,7 +242,7 @@ router.get("/:id", async (req, res) => {
 // @route   DELETE api/product/:id
 // @desc    Delete Products
 // @access  Private
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id",  async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
