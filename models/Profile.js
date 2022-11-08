@@ -6,7 +6,7 @@ const ProfileSchema = new mongoose.Schema({
     ref: "user",
   },
   phone: {
-    type: Number,
+    type: String,
     required: true,
   },
   address: {
@@ -14,18 +14,18 @@ const ProfileSchema = new mongoose.Schema({
     required: true,
   },
   ktp: {
-    type: Number,
+    type: String,
     required: true,
   },
   npwp: {
-    type: Number,
+    type: String,
   },
   bank: {
     type: String,
     required: true,
   },
   bank_account: {
-    type: Number,
+    type: String,
     required: true,
   },
   date: {
