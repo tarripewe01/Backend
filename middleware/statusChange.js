@@ -12,6 +12,8 @@ function sumStr(date, time) {
   return parseInt(sum);
 }
 
+moment.locale("id");
+
 const statusChange = async () => {
   // cron.schedule('* * * * *', async() => {
   const data = await ProductModel.find();

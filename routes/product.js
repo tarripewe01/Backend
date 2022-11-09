@@ -11,7 +11,7 @@ const upload = require("../middleware/upload");
 // @route   POST api/product
 // @desc    Create a Product
 // @access  Private
-router.post("/",  upload.any("photo_path"), async (req, res) => {
+router.post("/", auth, upload.any("photo_path"), async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -119,45 +119,45 @@ router.post("/",  upload.any("photo_path"), async (req, res) => {
 // @route   POST api/product
 // @desc    Create a Product
 // @access  Private
-router.put("/:id",  upload.any("photo_path"), async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+// router.put("/:id",  upload.any("photo_path"), async (req, res) => {
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() });
+//   }
 
-  const { id } = req.params;
-  try {
-    if (req.files) {
-      await Promise.all(
-        req.files.map(async (path) => {
-          await ProductModel.findByIdAndUpdate(
-            id,
-            {
-              $set: { photo_path: [] },
-            },
-            { new: true }
-          );
-        })
-      ).then(() => {
-        req.files.map(async (path) => {
-          await ProductModel.findByIdAndUpdate(
-            id,
-            {
-              $push: { photo_path: `/uploads/${path.filename}` },
-            },
-            { new: true }
-          );
-        });
-      });
-    }
-    const product = await ProductModel.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong !" });
-  }
-});
+//   const { id } = req.params;
+//   try {
+//     if (req.files) {
+//       await Promise.all(
+//         req.files.map(async (path) => {
+//           await ProductModel.findByIdAndUpdate(
+//             id,
+//             {
+//               $set: { photo_path: [] },
+//             },
+//             { new: true }
+//           );
+//         })
+//       ).then(() => {
+//         req.files.map(async (path) => {
+//           await ProductModel.findByIdAndUpdate(
+//             id,
+//             {
+//               $push: { photo_path: `/uploads/${path.filename}` },
+//             },
+//             { new: true }
+//           );
+//         });
+//       });
+//     }
+//     const product = await ProductModel.findByIdAndUpdate(id, req.body, {
+//       new: true,
+//     });
+//     res.status(200).json(product);
+//   } catch (error) {
+//     res.status(500).json({ message: "Something went wrong !" });
+//   }
+// });
 
 // @route   GET api/product
 // @desc    Get all Products
@@ -242,7 +242,7 @@ router.get("/:id", async (req, res) => {
 // @route   DELETE api/product/:id
 // @desc    Delete Products
 // @access  Private
-router.delete("/:id",  async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
