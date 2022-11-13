@@ -282,7 +282,7 @@ router.put("/favorite/:id", auth, async (req, res) => {
       return res.status(400).json({ msg: "Product already liked" });
     }
 
-    product.favorites.unshift({ user: req.user.id });
+    product.favorites.unshift({ user: req.user.id, status: false });
 
     await product.save();
 
