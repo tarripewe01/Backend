@@ -20,7 +20,7 @@ const ProductSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    kategori:{
+    kategori: {
       type: String,
       require: true,
     },
@@ -28,13 +28,13 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       default: "Aktif",
     },
-    tanggal_mulai: { 
-      type: String, 
-      required: true 
+    tanggal_mulai: {
+      type: String,
+      required: true,
     },
-    tanggal_selesai: { 
-      type: String, 
-      required: true 
+    tanggal_selesai: {
+      type: String,
+      required: true,
     },
     no_lot: {
       type: Number,
@@ -141,6 +141,10 @@ const ProductSchema = new mongoose.Schema(
         user: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "users",
+          status: {
+            type: String,
+            default: "Tidak Aktif",
+          },
         },
       },
     ],

@@ -108,6 +108,7 @@ router.post("/", auth, upload.any("photo_path"), async (req, res) => {
         })
       );
     }
+
     const data = await ProductModel.findById(product.id);
     res.json(data);
   } catch (err) {
