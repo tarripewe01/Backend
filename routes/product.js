@@ -346,7 +346,7 @@ router.post(
 
       const newBid = {
         nominal_bid,
-        user: req.user.id
+        user: req.user.id,
       };
 
       product.bids.unshift(newBid);

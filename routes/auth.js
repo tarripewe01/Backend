@@ -23,6 +23,19 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+// @route   GET api/auth/all
+// @desc    Test route
+// @access  Private
+router.get("/all",  async (req, res) => {
+  try {
+    const user = await UserModel.find();
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 // @route   POST api/auth
 // @desc    Login user & get token
 // @access  Public
