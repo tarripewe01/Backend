@@ -8,8 +8,6 @@ const bcrypt = require("bcryptjs");
 const auth = require("../middleware/auth");
 const UserModel = require("../models/User");
 
-
-
 // @route   GET api/auth
 // @desc    Test route
 // @access  Private
@@ -25,10 +23,10 @@ router.get("/", auth, async (req, res) => {
 
 // @route   GET api/auth/all
 // @desc    Test route
-// @access  Private
-router.get("/all",  async (req, res) => {
+// @access  Public
+router.get("/all", async (req, res) => {
   try {
-    const user = await UserModel.find();
+    const user = await UserModel.find()
     res.json(user);
   } catch (err) {
     console.error(err.message);
