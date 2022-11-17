@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cron = require("node-cron");
+const path = require("path");
 
 dotenv.config();
 const app = express();
@@ -23,7 +24,8 @@ job.start();
 
 // Init Middleware
 app.use(express.json({ extended: false }));
-app.use(express.static(__dirname));
+// app.use(express.static(__dirname));
+app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 app.use(morgan("dev"));
 app.use(
   cors({

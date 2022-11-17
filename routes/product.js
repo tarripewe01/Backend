@@ -166,6 +166,7 @@ router.post("/", auth, upload.any("photo_path"), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const products = await ProductModel.find().sort({ date: -1 });
+    const photos = await (await ProductModel.find("photo_path")).toArray();
     res.json(products);
   } catch (err) {
     console.error(err.message);
