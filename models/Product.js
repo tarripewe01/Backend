@@ -15,7 +15,11 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    photo_path: [],
+    avatar: {
+      type: Object,
+      url: String,
+      public_id: String,
+    },
     harga: {
       type: Number,
       required: true,

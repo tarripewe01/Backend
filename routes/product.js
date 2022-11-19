@@ -8,157 +8,299 @@ const ProductModel = require("../models/Product");
 const UserModel = require("../models/User");
 const upload = require("../middleware/upload");
 
-// @route   POST api/product
-// @desc    Create a Product
-// @access  Private
-router.post("/", auth, upload.any("photo_path"), async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+const { isValidObjectId } = require("mongoose");
 
-  try {
-    const user = await UserModel.findById(req.user.id).select("-password");
+const cloudinary = require("cloudinary").v2;
 
-    const {
-      cabang,
-      nama_produk,
-      harga,
-      kategori,
-      status_produk,
-      tanggal_mulai,
-      tanggal_selesai,
-      waktu_mulai,
-      waktu_selesai,
-      status_lelang,
-      no_lot,
-      kondisi_mesin,
-      kondisi_exterior,
-      kondisi_interior,
-      model_produk,
-      tahun_produk,
-      transmisi,
-      no_rangka,
-      no_mesin,
-      merk_produk,
-      kapasitas_mesin,
-      odometer,
-      catatan,
-      no_polisi,
-      warna,
-      stnk,
-      exp_stnk,
-      faktur,
-      ktp,
-      kwitansi,
-      form_A,
-      sph,
-      keur,
-      bpkb,
-    } = req.body;
-
-    const newProduct = new ProductModel({
-      cabang,
-      nama_produk,
-      harga,
-      kategori,
-      status_produk,
-      tanggal_mulai,
-      tanggal_selesai,
-      waktu_mulai,
-      waktu_selesai,
-      status_lelang,
-      no_lot,
-      kondisi_mesin,
-      kondisi_exterior,
-      kondisi_interior,
-      model_produk,
-      tahun_produk,
-      transmisi,
-      no_rangka,
-      no_mesin,
-      merk_produk,
-      kapasitas_mesin,
-      odometer,
-      catatan,
-      no_polisi,
-      warna,
-      stnk,
-      exp_stnk,
-      faktur,
-      ktp,
-      kwitansi,
-      form_A,
-      sph,
-      keur,
-      bpkb,
-      user: req.user.id,
-    });
-    const product = await newProduct.save();
-    if (req.files) {
-      await Promise.all(
-        req.files.map(async (path) => {
-          await ProductModel.findByIdAndUpdate(
-            product.id,
-            {
-              $push: { photo_path: `/uploads/${path.filename}` },
-            },
-            { new: true }
-          );
-        })
-      );
-    }
-
-    const data = await ProductModel.findById(product.id);
-    res.json(data);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+  secure: true,
 });
 
 // @route   POST api/product
 // @desc    Create a Product
 // @access  Private
-// router.put("/:id",  upload.any("photo_path"), async (req, res) => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     return res.status(400).json({ errors: errors.array() });
-//   }
+router.post("/", upload.single("avatar"), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-//   const { id } = req.params;
-//   try {
-//     if (req.files) {
-//       await Promise.all(
-//         req.files.map(async (path) => {
-//           await ProductModel.findByIdAndUpdate(
-//             id,
-//             {
-//               $set: { photo_path: [] },
-//             },
-//             { new: true }
-//           );
-//         })
-//       ).then(() => {
-//         req.files.map(async (path) => {
-//           await ProductModel.findByIdAndUpdate(
-//             id,
-//             {
-//               $push: { photo_path: `/uploads/${path.filename}` },
-//             },
-//             { new: true }
-//           );
-//         });
-//       });
-//     }
-//     const product = await ProductModel.findByIdAndUpdate(id, req.body, {
-//       new: true,
-//     });
-//     res.status(200).json(product);
-//   } catch (error) {
-//     res.status(500).json({ message: "Something went wrong !" });
-//   }
-// });
+  const {
+    cabang,
+    nama_produk,
+    harga,
+    kategori,
+    status_produk,
+    tanggal_mulai,
+    tanggal_selesai,
+    waktu_mulai,
+    waktu_selesai,
+    status_lelang,
+    no_lot,
+    kondisi_mesin,
+    kondisi_exterior,
+    kondisi_interior,
+    model_produk,
+    tahun_produk,
+    transmisi,
+    no_rangka,
+    no_mesin,
+    merk_produk,
+    kapasitas_mesin,
+    odometer,
+    catatan,
+    no_polisi,
+    warna,
+    stnk,
+    exp_stnk,
+    faktur,
+    ktp,
+    kwitansi,
+    form_A,
+    sph,
+    keur,
+    bpkb,
+  } = req.body;
+  const { file } = req;
+
+  const newProduct = new ProductModel({
+    cabang,
+    harga,
+    nama_produk,
+    kategori,
+    status_produk,
+    tanggal_mulai,
+    tanggal_selesai,
+    waktu_mulai,
+    waktu_selesai,
+    status_lelang,
+    no_lot,
+    kondisi_mesin,
+    kondisi_exterior,
+    kondisi_interior,
+    model_produk,
+    tahun_produk,
+    transmisi,
+    no_rangka,
+    no_mesin,
+    merk_produk,
+    kapasitas_mesin,
+    odometer,
+    catatan,
+    no_polisi,
+    warna,
+    stnk,
+    exp_stnk,
+    faktur,
+    ktp,
+    kwitansi,
+    form_A,
+    sph,
+    keur,
+    bpkb,
+  });
+
+  if (file) {
+    const { secure_url, public_id } = await cloudinary.uploader.upload(
+      file.path,
+      { gravity: "face", height: 480, width: 640, crop: "thumb" }
+    );
+
+    newProduct.avatar = { url: secure_url, public_id };
+  }
+
+  await newProduct.save();
+
+  res.status(201).json({
+    id: newProduct._id,
+    cabang,
+    harga,
+    nama_produk,
+    kategori,
+    status_produk,
+    tanggal_mulai,
+    tanggal_selesai,
+    waktu_mulai,
+    waktu_selesai,
+    status_lelang,
+    no_lot,
+    kondisi_mesin,
+    kondisi_exterior,
+    kondisi_interior,
+    model_produk,
+    tahun_produk,
+    transmisi,
+    no_rangka,
+    no_mesin,
+    merk_produk,
+    kapasitas_mesin,
+    odometer,
+    catatan,
+    no_polisi,
+    warna,
+    stnk,
+    exp_stnk,
+    faktur,
+    ktp,
+    kwitansi,
+    form_A,
+    sph,
+    keur,
+    bpkb,
+    avatar: newProduct.avatar?.url,
+  });
+});
+
+// @route   POST api/product
+// @desc    Create a Product
+// @access  Private
+router.put("/:productId", upload.single("avatar"), async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const {
+    cabang,
+    nama_produk,
+    harga,
+    kategori,
+    status_produk,
+    tanggal_mulai,
+    tanggal_selesai,
+    waktu_mulai,
+    waktu_selesai,
+    status_lelang,
+    no_lot,
+    kondisi_mesin,
+    kondisi_exterior,
+    kondisi_interior,
+    model_produk,
+    tahun_produk,
+    transmisi,
+    no_rangka,
+    no_mesin,
+    merk_produk,
+    kapasitas_mesin,
+    odometer,
+    catatan,
+    no_polisi,
+    warna,
+    stnk,
+    exp_stnk,
+    faktur,
+    ktp,
+    kwitansi,
+    form_A,
+    sph,
+    keur,
+    bpkb,
+  } = req.body;
+  const { file } = req;
+  const { productId } = req.params;
+
+  if (!isValidObjectId(productId)) return sendError(res, "Invalid Request");
+
+  const product = await ProductModel.findById(productId);
+  if (!product) return sendError(res, "Product not found");
+
+  const public_id = product.avatar?.public_id;
+
+  // remove old Image
+  if (public_id && file) {
+    const { result } = await cloudinary.uploader.destroy(public_id);
+    if (result !== "ok")
+      return sendError(res, "Could not remove image from cloud");
+  }
+
+  // upload new image
+  if (file) {
+    const { secure_url, public_id } = await cloudinary.uploader.upload(
+      file.path,
+      { gravity: "face", height: 480, width: 640, crop: "thumb" }
+    );
+
+    product.avatar = { url: secure_url, public_id };
+  }
+
+  product.no_lot = no_lot;
+  product.cabang = cabang;
+  product.nama_produk = nama_produk;
+  product.harga = harga;
+  product.kategori = kategori;
+  product.tanggal_mulai = tanggal_mulai;
+  product.tanggal_selesai = tanggal_selesai;
+  product.kondisi_mesin = kondisi_mesin;
+  product.kondisi_exterior = kondisi_exterior;
+  product.kondisi_interior = kondisi_interior;
+  product.merk_produk = merk_produk;
+  product.model_produk = model_produk;
+  product.tahun_produk = tahun_produk;
+  product.transmisi = transmisi;
+  product.no_rangka = no_rangka;
+  product.no_mesin = no_mesin;
+  product.kapasitas_mesin = kapasitas_mesin;
+  product.odometer = odometer;
+  product.catatan = catatan;
+  product.no_polisi = no_polisi;
+  product.warna = warna;
+  product.stnk = stnk;
+  product.exp_stnk = exp_stnk;
+  product.faktur = faktur;
+  product.ktp = ktp;
+  product.kwitansi = kwitansi;
+  product.form_A = form_A;
+  product.sph = sph;
+  product.keur = keur;
+  product.bpkb = bpkb;
+  product.waktu_mulai = waktu_mulai;
+  product.waktu_selesai = waktu_selesai;
+  product.status_produk = status_produk;
+
+  await product.save();
+
+  res.status(201).json({
+    id: product._id,
+    cabang,
+    harga,
+    nama_produk,
+    kategori,
+    status_produk,
+    tanggal_mulai,
+    tanggal_selesai,
+    waktu_mulai,
+    waktu_selesai,
+    status_lelang,
+    no_lot,
+    kondisi_mesin,
+    kondisi_exterior,
+    kondisi_interior,
+    model_produk,
+    tahun_produk,
+    transmisi,
+    no_rangka,
+    no_mesin,
+    merk_produk,
+    kapasitas_mesin,
+    odometer,
+    catatan,
+    no_polisi,
+    warna,
+    stnk,
+    exp_stnk,
+    faktur,
+    ktp,
+    kwitansi,
+    form_A,
+    sph,
+    keur,
+    bpkb,
+    avatar: product.avatar?.url,
+  });
+});
 
 // @route   GET api/product
 // @desc    Get all Products
@@ -347,7 +489,7 @@ router.post(
 
       const newBid = {
         nominal_bid,
-        user: req.user.id,
+        user,
       };
 
       product.bids.unshift(newBid);
