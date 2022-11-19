@@ -482,10 +482,11 @@ router.post(
     }
 
     try {
-      const user = await UserModel.findById(req.user.id).select("-password");
-      const product = await ProductModel.findById(req.params.id);
-
+      const { id } = req.params;
       const { nominal_bid } = req.body;
+
+      const user = await UserModel.findById(req.user.id).select("-password");
+      const product = await ProductModel.findById(id);
 
       const newBid = {
         nominal_bid,
