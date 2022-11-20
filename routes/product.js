@@ -381,7 +381,7 @@ router.get("/:id", async (req, res) => {
 // @route   DELETE api/product/:id
 // @desc    Delete Products
 // @access  Private
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
@@ -407,7 +407,7 @@ router.delete("/:id", auth, async (req, res) => {
 // @route   PUT api/product/favorite/:id
 // @desc    Favorite a Product
 // @access  Private
-router.put("/favorite/:id", auth, async (req, res) => {
+router.put("/favorite/:id", async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
