@@ -317,10 +317,14 @@ router.get("/", async (req, res) => {
 router.get("/filter", async (req, res) => {
   const { kategori, status } = req.query;
   try {
-    if (kategori && !status) {
-      const data = await ProductModel.find({ kategori: kategori });
+    if (kategori && status) {
+      const data = await ProductModel.find({
+        kategori: kategori,
+        status_produk: status,
+      });
       return res.send(data);
-    } else if (!kategori && status) {
+    } 
+    else if (!kategori && !status) {
       const data = await ProductModel.find({ status_produk: status });
       return res.send(data);
     } else {
@@ -390,9 +394,9 @@ router.delete("/:id", async (req, res) => {
     }
 
     // Check user
-    if (product.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: "User not authorized" });
-    }
+    // if (product.user.toString() !== req.user.id) {
+    //   return res.status(401).json({ msg: "User not authorized" });
+    // }
 
     await product.remove();
 
