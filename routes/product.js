@@ -306,14 +306,9 @@ router.put("/:productId", upload.single("avatar"), async (req, res) => {
 // @desc    Get all Products
 // @access  Public
 router.get("/", async (req, res) => {
-  try {
-    const products = await ProductModel.find().sort({ date: -1 });
-    const photos = await (await ProductModel.find("photo_path")).toArray();
-    res.json(products);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+  const result = await ProductModel.find().sort({ createdAt: -1 }).limit(10);
+
+  res.status(200).json(result);
 });
 
 // @route   GET api/product/filter?kategori=Mobil&status=Aktif
