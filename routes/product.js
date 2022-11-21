@@ -317,15 +317,19 @@ router.get("/", async (req, res) => {
 router.get("/filter", async (req, res) => {
   const { kategori, status } = req.query;
   try {
-    if (kategori && status) {
+    if (kategori && !status) {
       const data = await ProductModel.find({
         kategori: kategori,
-        status_produk: status,
       });
       return res.send(data);
-    } 
-    else if (!kategori && !status) {
+    } else if (!kategori && status) {
       const data = await ProductModel.find({ status_produk: status });
+      return res.send(data);
+    } else if (kategori && status) {
+      const data = await ProductModel.find({
+        status_produk: status,
+        kategori: kategori,
+      });
       return res.send(data);
     } else {
       const data = await ProductModel.find({
@@ -485,11 +489,12 @@ router.post(
       const { nominal_bid } = req.body;
 
       const user = await UserModel.findById(req.user.id).select("-password");
+      console.log(user);
       const product = await ProductModel.findById(id);
 
       const newBid = {
         nominal_bid,
-        user,
+        user : user,
       };
 
       product.bids.unshift(newBid);
