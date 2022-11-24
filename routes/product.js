@@ -415,7 +415,7 @@ router.delete("/:id", async (req, res) => {
 // @route   PUT api/product/favorite/:id
 // @desc    Favorite a Product
 // @access  Private
-router.put("/favorite/:id", async (req, res) => {
+router.put("/favorite/:id", auth, async (req, res) => {
   try {
     const product = await ProductModel.findById(req.params.id);
 
@@ -428,7 +428,7 @@ router.put("/favorite/:id", async (req, res) => {
       return res.status(400).json({ msg: "Product already liked" });
     }
 
-    product.favorites.unshift({ user: req.user.id, status: false });
+    product.favorites.unshift({ user: req.user.id });
 
     await product.save();
 
@@ -470,6 +470,7 @@ router.put("/unfavorite/:id", auth, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
 
 // @route   POST api/product/bid/:id
 // @desc    Create Bid a Product
