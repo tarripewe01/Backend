@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Untuk keperluan magang di ITC-Finance",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "server": "nodemon index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
