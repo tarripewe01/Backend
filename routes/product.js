@@ -345,17 +345,17 @@ router.get("/filter", async (req, res) => {
 // @desc    Get all Lelang Filter
 // @access  Public
 router.get("/filter/lelang", async (req, res) => {
-  const { kategori, status } = req.query;
+  const { kategori, status_lelang } = req.query;
   try {
-    if (kategori && !status) {
+    if (kategori && !status_lelang) {
       const data = await ProductModel.find({ kategori: kategori });
       return res.send(data);
-    } else if (!kategori && status) {
-      const data = await ProductModel.find({ status_lelang: status });
+    } else if (!kategori && status_lelang) {
+      const data = await ProductModel.find({ status_lelang: status_lelang });
       return res.send(data);
     } else {
       const data = await ProductModel.find({
-        status_lelang: status,
+        status_lelang: status_lelang,
         kategori: kategori,
       });
       return res.send(data);
