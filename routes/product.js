@@ -479,7 +479,6 @@ router.put("/unfavorite/:id", auth, async (req, res) => {
   }
 });
 
-
 // @route   POST api/product/bid/:id
 // @desc    Create Bid a Product
 // @access  Private
@@ -503,7 +502,7 @@ router.post(
 
       const newBid = {
         nominal_bid,
-        user : user,
+        user: user,
       };
 
       product.bids.unshift(newBid);

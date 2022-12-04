@@ -25,13 +25,9 @@ job.start();
 // Init Middleware
 app.use(express.json({ extended: false }));
 // app.use(express.static(__dirname));
-app.use('/uploads', express.static(path.join(__dirname, './uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 app.use(morgan("dev"));
-app.use(
-  cors({
-    credentials: true,
-  })
-);
+app.use(cors());
 app.get("/", (req, res) => {
   res.send("API Running!");
 });
