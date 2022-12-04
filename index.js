@@ -27,7 +27,7 @@ app.use(express.json({ extended: false }));
 // app.use(express.static(__dirname));
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 app.use(morgan("dev"));
-app.use(cors());
+app.use(cors({origin: "*"}));
 app.get("/", (req, res) => {
   res.send("API Running!");
 });
