@@ -27,7 +27,13 @@ app.use(express.json({ extended: false }));
 // app.use(express.static(__dirname));
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 app.use(morgan("dev"));
-app.use(cors({origin: "*"}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true, //access-control-allow-credentials:true
+    optionSuccessStatus: 200,
+  })
+);
 app.get("/", (req, res) => {
   res.send("API Running!");
 });
