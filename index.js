@@ -29,7 +29,7 @@ app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://itc-finance.netlify.app",
     credentials: true, //access-control-allow-credentials:true
     optionSuccessStatus: 200,
     methods: ["GET", "POST", "PUT", "DELETE"],
